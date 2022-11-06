@@ -19,10 +19,6 @@ stdin.on('data', (data) => {
 })
 
 process.on('SIGINT', () => process.exit());
-process.on('exit', code => {
-    if (code === 0) {
-        stdout.write('Всё в порядке');
-    } else {
-        stderr.write(`Что-то пошло не так. Программа завершилась с кодом ${code}`);
-    }
+process.on('exit', () => {
+    stdout.write('Goodbye');
 });
