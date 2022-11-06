@@ -1,34 +1,20 @@
-// const path = require('path')
-// console.log(path.parse(__filename, 'secret-folder'))
+const path = require('path')
+const fs = require('fs')
+const pathSecretFolder = path.join(__dirname, 'secret-folder')
 
-// ------------
-
-// const http = require('http');
-
-// const PORT = 3000;
-
-// const requestHandler = (request, response) => {
-//     const { method, url } = request;
-//     const heading = `<h1 style="color: red">${url} page</h1>`;
-//     const content = `<div style="background-color: green; width: 100px; height: 100px">Green block 100px x 100px</div>`;
-//     console.log(`Получен ${method}-запрос на ${url}`);
-//     response.write(heading);
-//     response.end(content);
-// };
-
-// const server = http.createServer(requestHandler);
-
-// server.listen(PORT, 'localhost', () => {
-//     console.log(`Сервер запущен на порту ${PORT}`);
-// })
-
-// ------------
-
-const EventEmitter = require('events');
-const emitter = new EventEmitter();
-
-emitter.on('start', message => console.log(message));
-
-emitter.emit('start', 'Hello'); // Hello
-emitter.emit('start', 'from'); // from
-emitter.emit('start', 'Node.js'); // Node.js
+fs.readdir(pathSecretFolder, (err, files) => {
+    if (err) throw err;
+    
+    for (let item of files) {
+        const pathFile = path.join(__dirname, 'secret-folder', item)
+        fs.stat(pathFile, (err, stats) => {
+            if (err) throw err;
+            if (stats.isFile()) {
+                const itemName = item.split('.').splice(0, 1).join()
+                const itemExt = item.split('.').slice(1).join()
+                const itemSize = stats.size / 1024
+                console.log(`${itemName} - ${itemExt} - ${itemSize}kb`)
+            }
+        })
+    }
+})
